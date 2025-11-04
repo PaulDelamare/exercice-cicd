@@ -25,7 +25,7 @@ jobs:
         with:
           node-version: '18'
       - run: npm ci
-      - run: npm run unit:test
+      - run: npm test
 
   security:
     runs-on: ubuntu-latest
@@ -35,6 +35,7 @@ jobs:
         with:
           node-version: '18'
       - run: npm ci
+      - run: npm audit fix
       - run: npm audit --audit-level=moderate
 
   deploy:
