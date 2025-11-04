@@ -6,7 +6,7 @@
   "scripts": {
     "test": "vitest",
     "dev": "tsx watch src/server.ts",
-    "build": "tsx build src/server.ts",
+    "build": "tsc --noEmit",
     "migrate:init": "npx prisma migrate dev --name init",
     "migrate": "npx prisma migrate dev",
     "push": "npx prisma db push",
