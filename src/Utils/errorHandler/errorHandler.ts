@@ -1,5 +1,5 @@
 // ! IMPORTS
-import { Prisma } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { Request, Response } from 'express';
 import { formatDate } from '../formatDateError/formatDateError';
 import { logger } from '../logger/logger';
@@ -9,7 +9,7 @@ import { logger } from '../logger/logger';
  * @param {Prisma.PrismaClientKnownRequestError} error - The Prisma error object to be converted.
  * @returns {{status: number, message: string}} - An object with the status code and an appropriate error message.
  */
-const getPrismaErrorMessage = (error: Prisma.PrismaClientKnownRequestError): { status: number, message: string } => {
+const getPrismaErrorMessage = (error: PrismaClientKnownRequestError): { status: number, message: string } => {
 
     // Determines the error based on the error code
     switch (error.code) {
@@ -100,7 +100,7 @@ const sendErrorResponse = (res: Response, status: number, error: string | { fiel
 export const handleError = (error: unknown, req: Request, res: Response, errorMessage?: string): void => {
 
     // Handle Prisma errors
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error instanceof PrismaClientKnownRequestError) {
 
         // Send an error with a custom error message
         const errorPrisma = getPrismaErrorMessage(error);

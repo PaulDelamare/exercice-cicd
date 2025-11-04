@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { handleError } from './errorHandler';
 import { Request, Response } from 'express';
-import { Prisma } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 // ! Tests
 describe('handleError middleware', () => {
@@ -14,7 +14,7 @@ describe('handleError middleware', () => {
     // Reset the mocks before each test
     it('should handle Prisma errors', () => {
         // Create a known Prisma error
-        const prismaError = new Prisma.PrismaClientKnownRequestError('Prisma error', {
+        const prismaError = new PrismaClientKnownRequestError('Prisma error', {
             code: 'P2002',
             clientVersion: '4.0.0',
         });
@@ -37,7 +37,7 @@ describe('handleError middleware', () => {
         // Create a known Prisma error
         const error = {
             code: 'P9999', // Erreur inconnue
-        } as Prisma.PrismaClientKnownRequestError;
+        } as PrismaClientKnownRequestError;
 
         // Call the handleError function
         handleError(error, mockReq, mockRes);

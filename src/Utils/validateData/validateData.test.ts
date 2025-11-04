@@ -9,9 +9,10 @@ describe('validateData multiple errors', () => {
     });
 
     it('should throw both "required" and "min" errors when both fields are invalid', async () => {
-        const invalidData = { age: 16 };
+        const invalidData: any = { age: 16 };
 
         try {
+            // @ts-ignore
             await validateData(schema, invalidData);
         } catch (error: any) {
             expect(error.status).toBe(400);
@@ -23,9 +24,10 @@ describe('validateData multiple errors', () => {
     });
 
     it('should throw "required" error when "name" is missing', async () => {
-        const invalidData = { age: 20 };  // "name" is missing
+        const invalidData: any = { age: 20 };  // "name" is missing
 
         try {
+            // @ts-ignore
             await validateData(schema, invalidData);
         } catch (error: any) {
             expect(error.status).toBe(400);
@@ -57,9 +59,10 @@ describe('validateData multiple errors', () => {
     });
 
     it('should throw "string" error when "name" is not a string', async () => {
-        const invalidData = { name: 123, age: 20 };  // "name" is a number instead of a string
+        const invalidData: any = { name: 123, age: 20 };  // "name" is a number instead of a string
 
         try {
+            // @ts-ignore
             await validateData(schema, invalidData);
         } catch (error: any) {
             expect(error.status).toBe(400);
@@ -70,9 +73,10 @@ describe('validateData multiple errors', () => {
     });
 
     it('should throw "number" error when "age" is not a number', async () => {
-        const invalidData = { name: 'John', age: 'twenty' };  // "age" is a string instead of a number
+        const invalidData: any = { name: 'John', age: 'twenty' };  // "age" is a string instead of a number
 
         try {
+            // @ts-ignore
             await validateData(schema, invalidData);
         } catch (error: any) {
             expect(error.status).toBe(400);
