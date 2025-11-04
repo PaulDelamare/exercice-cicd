@@ -1,4 +1,3 @@
-import { bdd } from "../../config/prismaClient.config";
 import { throwError } from "../Utils/errorHandler/errorHandler";
 
 /**

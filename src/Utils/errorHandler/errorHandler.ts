@@ -1,36 +1,7 @@
 // ! IMPORTS
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { Request, Response } from 'express';
 import { formatDate } from '../formatDateError/formatDateError';
 import { logger } from '../logger/logger';
-
-/**
- * Converts a Prisma error into a consistent error object containing a status code and an appropriate error message.
- * @param {Prisma.PrismaClientKnownRequestError} error - The Prisma error object to be converted.
- * @returns {{status: number, message: string}} - An object with the status code and an appropriate error message.
- */
-const getPrismaErrorMessage = (error: PrismaClientKnownRequestError): { status: number, message: string } => {
-
-    // Determines the error based on the error code
-    switch (error.code) {
-
-        // Unique constraint
-        case 'P2002':
-            const field = error.meta?.target || 'inconnu';
-            return { status: 400, message: `Erreur : le champ ${field} doit être unique. La valeur fournie est déjà utilisée.` };
-
-        // Foreign key constraint
-        case 'P2003':
-            return { status: 400, message: "Erreur : violation de contrainte de clé étrangère. Veuillez vérifier les références." };
-
-        case 'P2025':
-            return { status: 404, message: "Erreur : Une opération a échoué car elle dépend d'un ou plusieurs enregistrements requis mais introuvables." };
-
-        // Default error
-        default:
-            return { status: 500, message: "Erreur serveur : une erreur Prisma inconnue s'est produite." };
-    }
-}
 
 /**
  * Formats validation errors into a consistent structure.
@@ -99,20 +70,8 @@ const sendErrorResponse = (res: Response, status: number, error: string | { fiel
  */
 export const handleError = (error: unknown, req: Request, res: Response, errorMessage?: string): void => {
 
-    // Handle Prisma errors
-    if (error instanceof PrismaClientKnownRequestError) {
-
-        // Send an error with a custom error message
-        const errorPrisma = getPrismaErrorMessage(error);
-
-        // Log the error
-        logError('Erreur Prisma', req, errorPrisma.message, errorMessage);
-
-        // Send a 400 error with a custom error message
-        sendErrorResponse(res, errorPrisma.status, errorPrisma.message);
-
-        // Handle validation errors
-    } else if (typeof error === 'object' && error !== null && 'status' in error) {
+    // Handle validation errors
+    if (typeof error === 'object' && error !== null && 'status' in error) {
 
         // Format the validation errors
         const validationError = formatValidationErrors(error as { status: number, error: { field: string, message: string }[] });
